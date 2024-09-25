@@ -1,9 +1,7 @@
-# integrations/linkedin_api.py
 import requests
 
 LINKEDIN_API_URL = "https://api.linkedin.com/v2"
 
-# Funzione per pubblicare un post su LinkedIn
 def publish_post(access_token, post_text):
     headers = {
         "Authorization": f"Bearer {access_token}",
@@ -17,7 +15,7 @@ def publish_post(access_token, post_text):
         "distribution": {
             "linkedInDistributionTarget": {}
         },
-        "owner": f"urn:li:person:{your_linkedin_id}"
+        "owner": f"urn:li:person:{'id_linkedin_da_inserire'}"
     }
     url = f"{LINKEDIN_API_URL}/ugcPosts"
     response = requests.post(url, headers=headers, json=data)

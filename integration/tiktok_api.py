@@ -1,9 +1,7 @@
-# integrations/tiktok_api.py
 import requests
 
 TIKTOK_API_URL = "https://open-api.tiktok.com"
 
-# Funzione per pubblicare un video su TikTok
 def publish_video(access_token, video_url):
     headers = {
         "Authorization": f"Bearer {access_token}"

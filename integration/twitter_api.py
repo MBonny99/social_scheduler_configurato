@@ -1,10 +1,7 @@
-# integrations/twitter_api.py
 import requests
 
-# Endpoint per Twitter API
 TWITTER_API_URL = "https://api.twitter.com/2/tweets"
 
-# Funzione per pubblicare un tweet
 def publish_tweet(access_token, tweet_text):
     headers = {
         "Authorization": f"Bearer {access_token}",
