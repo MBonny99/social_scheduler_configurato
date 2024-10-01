@@ -1,0 +1,3 @@
+nel file app.py vengono gestite delle route di base tra le quali ci sono login , registrazione e la rotta protetta per autenticare i token
+
+nel file main_scheduler_listener.py viene eseguito il backend che permette di gestire la gestione programmata dei post di instagram(sezione non pushata su git)

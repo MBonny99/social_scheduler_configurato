@@ -38,7 +38,8 @@
     </form>
 
     <script>
-        // Inizializza Firebase
+
+        //FIREBASE CREDENTIAL
         const firebaseConfig = {
             apiKey: "AIzaSyAhJEtLIijC_rQfm6efzBDOAj2NPGaEL_Y",
             authDomain: "socialscheduler-b.firebaseapp.com",
@@ -58,7 +59,7 @@
         function formatDateTime(datetime) {
             const date = new Date(datetime);
             const year = date.getFullYear();
-            const month = String(date.getMonth() + 1).padStart(2, '0'); // Months are zero-based
+            const month = String(date.getMonth() + 1).padStart(2, '0');
             const day = String(date.getDate()).padStart(2, '0');
             const hours = String(date.getHours()).padStart(2, '0');
             const minutes = String(date.getMinutes()).padStart(2, '0');
@@ -66,7 +67,7 @@
             return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
         }
 
-        // Gestisci la creazione del post
+        // Creazione dei dati del post
         document.getElementById('post-form').addEventListener('submit', (e) => {
             e.preventDefault();
 
@@ -77,7 +78,7 @@
             const description = document.getElementById('post-description').value;
             const social = Array.from(document.getElementById('post-social').selectedOptions).map(option => option.value);
 
-            // Format the date to "YYYY-MM-DD HH:mm:ss"
+
             const formattedDate = formatDateTime(postDate);
 
             // Verifica che l'utente sia autenticato
@@ -92,14 +93,13 @@
                     },
                     idUtente: user.uid,
                     social: social,
-                    data: formattedDate // Use formatted date
+                    data: formattedDate
                 };
 
-                // Crea un record nella collezione PostScheduler
+                // Crea un record nella collezione PostScheduled
                 db.collection('PostScheduled').add(postData)
                     .then(() => {
                         alert('Post creato con successo!');
-                        // Reindirizza o resetta il form se necessario
                         document.getElementById('post-form').reset();
                     })
                     .catch((error) => {

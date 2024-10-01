@@ -2,49 +2,37 @@ from google.cloud import firestore
 from datetime import datetime, timedelta
 import time
 
-# Inizializza il client Firestore
 db = firestore.Client()
-collection_time = 120  # Tempo per aggiornare la collezione
+collection_time = 120  # Tempo per aggiornare la collezione in minuti
 
 
-# Funzione per recuperare i dati iniziali da Firestore
 def get_data_from_firebase():
-    print("Chiamata Firestore per recuperare i dati iniziali...")
-
-    # Specifica il nome della tua collection
     collection_name = 'PostScheduled'
 
     try:
-        # Ottieni l'ora attuale e aggiungi 2 ore
         current_time = datetime.now().replace(second=0, microsecond=0)
         end_time = current_time + timedelta(minutes=collection_time)
 
-        # Converti le date in stringhe nel formato YYYY-MM-DD HH:mm:ss
         current_time_str = current_time.strftime('%Y-%m-%d %H:%M:%S')
         end_time_str = end_time.strftime('%Y-%m-%d %H:%M:%S')
 
-        # Stampa i tempi per il debugging
         print(f"Data e ora attuale: {current_time_str}")
         print(f"Data e ora +tempo: {end_time_str}")
 
-        # Usa correttamente where() per i filtri temporali
         collection_ref = db.collection(collection_name).where(
             'data', '>=', current_time_str
         ).where(
             'data', '<', end_time_str
         )
 
-        # Recupera i documenti dalla collection
         docs = collection_ref.get()
         data = []
 
         for doc in docs:
-            doc_data = doc.to_dict()  # Converte il documento in un dizionario
-            doc_data['id'] = doc.id  # Aggiunge l'ID del documento ai dati
+            doc_data = doc.to_dict()
+            doc_data['id'] = doc.id  # Aggiungo l'ID del documento ai dati
             data.append(doc_data)
             print(f"Documento recuperato: {doc_data}")
-
-        print(f"Dati recuperati da Firestore: {data}")
         return data
     except Exception as e:
         print(f"Errore nel recupero dei dati: {e}")
@@ -57,7 +45,7 @@ def check_for_matching_time(data):
     to_remove = []  # Lista di elementi da rimuovere dopo la corrispondenza
 
     for entry in data:
-        event_time_str = entry['data']  # Ora l'event_time è una stringa
+        event_time_str = entry['data']
         if current_time_str == event_time_str:
             print(f"Evento trovato con ID {entry['id']} alle {event_time_str}")
             socials = entry['social']
@@ -71,7 +59,6 @@ def check_for_matching_time(data):
         print(f"Evento con ID {entry['id']} rimosso dalla lista")
 
 
-# Funzione per gestire i cambiamenti in tempo reale
 def on_snapshot(col_snapshot, changes, read_time):
     print(f'Notifica di cambiamenti da Firestore al {read_time}:')
     for change in changes:

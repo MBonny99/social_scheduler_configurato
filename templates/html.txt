@@ -1,0 +1,4 @@
+Nella cartella template ci sono tutti i file html dove vengono effettuati i reindirizzamenti da flask
+
+Non penso di dover spiegare cosa fanno il login e la registrazione , unica cosa, lo scheduler contiene una sezione di script js
+quello script js attualmente è la sezione che permette di scrivere i dati su direbase (collegati all'UID dell'utente loggato)
