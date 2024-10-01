@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Scheduler</title>
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore-compat.js"></script>
+</head>
+<body>
+    <h2>Crea un Post</h2>
+    <form id="post-form">
+        <label for="post-date">Data:</label>
+        <input type="datetime-local" id="post-date" required>
+
+        <label for="post-title">Titolo:</label>
+        <input type="text" id="post-title" placeholder="Titolo" required>
+
+        <label for="post-location">Location:</label>
+        <input type="text" id="post-location" placeholder="Location" required>
+
+        <label for="post-image-url">Image URL:</label>
+        <input type="text" id="post-image-url" placeholder="https://example.com/image.jpg" required>
+
+        <label for="post-description">Descrizione:</label>
+        <textarea id="post-description" placeholder="Descrizione" required></textarea>
+
+        <label for="post-social">Pubblica su:</label>
+        <select id="post-social" multiple required>
+            <option value="Facebook">Facebook</option>
+            <option value="Twitter">Twitter</option>
+            <option value="Instagram">Instagram</option>
+            <option value="LinkedIn">LinkedIn</option>
+        </select>
+
+        <button type="submit">Crea Post</button>
+    </form>
+
+    <script>
+        // Inizializza Firebase
+        const firebaseConfig = {
+            apiKey: "AIzaSyAhJEtLIijC_rQfm6efzBDOAj2NPGaEL_Y",
+            authDomain: "socialscheduler-b.firebaseapp.com",
+            projectId: "socialscheduler-b",
+            storageBucket: "socialscheduler-b.appspot.com",
+            messagingSenderId: "562609701543",
+            appId: "1:562609701543:web:0790720ac96eff96b8d182",
+            measurementId: "G-J9WQGCGHGL"
+        };
+
+        // Inizializza l'app Firebase
+        firebase.initializeApp(firebaseConfig);
+        const auth = firebase.auth();
+        const db = firebase.firestore();
+
+        // Funzione per formattare la data
+        function formatDateTime(datetime) {
+            const date = new Date(datetime);
+            const year = date.getFullYear();
+            const month = String(date.getMonth() + 1).padStart(2, '0'); // Months are zero-based
+            const day = String(date.getDate()).padStart(2, '0');
+            const hours = String(date.getHours()).padStart(2, '0');
+            const minutes = String(date.getMinutes()).padStart(2, '0');
+            const seconds = '00';
+            return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
+        }
+
+        // Gestisci la creazione del post
+        document.getElementById('post-form').addEventListener('submit', (e) => {
+            e.preventDefault();
+
+            const postDate = document.getElementById('post-date').value; // Date in ISO format
+            const title = document.getElementById('post-title').value;
+            const location = document.getElementById('post-location').value;
+            const imageUrl = document.getElementById('post-image-url').value;
+            const description = document.getElementById('post-description').value;
+            const social = Array.from(document.getElementById('post-social').selectedOptions).map(option => option.value);
+
+            // Format the date to "YYYY-MM-DD HH:mm:ss"
+            const formattedDate = formatDateTime(postDate);
+
+            // Verifica che l'utente sia autenticato
+            const user = auth.currentUser;
+            if (user) {
+                const postData = {
+                    datiPost: {
+                        title: title,
+                        location: location,
+                        image_url: imageUrl,
+                        description: description,
+                    },
+                    idUtente: user.uid,
+                    social: social,
+                    data: formattedDate // Use formatted date
+                };
+
+                // Crea un record nella collezione PostScheduler
+                db.collection('PostScheduled').add(postData)
+                    .then(() => {
+                        alert('Post creato con successo!');
+                        // Reindirizza o resetta il form se necessario
+                        document.getElementById('post-form').reset();
+                    })
+                    .catch((error) => {
+                        console.error('Errore durante la creazione del post:', error);
+                        alert('Errore durante la creazione del post: ' + error.message);
+                    });
+            } else {
+                alert('Devi essere autenticato per creare un post.');
+            }
+        });
+    </script>
+</body>
+</html>
