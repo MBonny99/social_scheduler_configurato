@@ -1,3 +1,11 @@
 nel file app.py vengono gestite delle route di base tra le quali ci sono login , registrazione e la rotta protetta per autenticare i token
 
 nel file main_scheduler_listener.py viene eseguito il backend che permette di gestire la gestione programmata dei post di instagram(sezione non pushata su git)
+
+per far funzionare il file main_scheduler_listener.py devi configurare da terminale le credential di firebase
+
+export GOOGLE_APPLICATION_CREDENTIALS="/Users/bonny/Desktop/GitHub/Social Scheduler/social_scheduler_configurato/socialscheduler-b-firebase-adminsdk-z74d8-12256d992c.json"
+echo $GOOGLE_APPLICATION_CREDENTIALS
+
+per avviare poi il main_scheduler_listener.py :
+dalla directory fai python main_scheduler_listener.py
